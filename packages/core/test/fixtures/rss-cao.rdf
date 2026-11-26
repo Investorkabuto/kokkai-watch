@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+<channel rdf:about="https://www.cao.go.jp/">
+  <title>内閣府 報道発表新着情報</title>
+  <link>https://www.cao.go.jp/</link>
+  <description>内閣府 報道発表新着情報 RSS</description>
+  <dc:language>ja</dc:language>
+  <items>
+    <rdf:Seq>
+      <rdf:li rdf:resource="https://www.fsc.go.jp/iinkai_annai/annai/annai1044.html" />
+      <rdf:li rdf:resource="https://www.fsc.go.jp/senmon/sonota/annai/wg_bpa_annai_8.html" />
+      <rdf:li rdf:resource="https://www.esri.cao.go.jp/jp/stat/di/di.html" />
+      <rdf:li rdf:resource="https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html" />
+      <rdf:li rdf:resource="https://www.fsc.go.jp/senmon/sonota/annai/wg_gijutsukikaku_annai_40.html" />
+      <rdf:li rdf:resource="https://www.fsc.go.jp/senmon/nouyaku/annai/nouyaku_annai_dai5_senmon_52.html" />
+      <rdf:li rdf:resource="https://survey.gov-online.go.jp" />
+      <rdf:li rdf:resource="https://www.cao.go.jp/consumer/kabusoshiki/kokyoryokin/senmon/094/kaisai/index.html" />
+      <rdf:li rdf:resource="https://www.cao.go.jp/consumer/kabusoshiki/ai_technology/015/kaisai/index.html " />
+      <rdf:li rdf:resource="https://www.fsc.go.jp/iinkai_annai/annai/annai1043.html" />
+    </rdf:Seq>
+  </items>
+  <image rdf:resource="https://www.cao.go.jp/common4/img/logo_pc.svg" />
+</channel>
+<image rdf:about="https://www.cao.go.jp/common4/img/logo_pc.svg">
+  <title>内閣府画像</title>
+  <url>https://www.cao.go.jp/common4/img/logo_pc.svg</url>
+  <link>https://www.cao.go.jp/</link>
+</image>
+<item rdf:about="https://www.fsc.go.jp/iinkai_annai/annai/annai1044.html">
+  <title><![CDATA[食品安全委員会（第1044回）の開催について【12月1日開催】]]></title>
+  <link>https://www.fsc.go.jp/iinkai_annai/annai/annai1044.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-26T14:36:00+09:00</dc:date>
+  <dc:subject>開催案内 食品安全委員会事務局</dc:subject>
+</item>
+<item rdf:about="https://www.fsc.go.jp/senmon/sonota/annai/wg_bpa_annai_8.html">
+  <title><![CDATA[ビスフェノールAワーキンググループ（第8回）の開催について【12月3日開催】]]></title>
+  <link>https://www.fsc.go.jp/senmon/sonota/annai/wg_bpa_annai_8.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-26T14:31:00+09:00</dc:date>
+  <dc:subject>開催案内 食品安全委員会事務局</dc:subject>
+</item>
+<item rdf:about="https://www.esri.cao.go.jp/jp/stat/di/di.html">
+  <title><![CDATA[景気動向指数（令和8年9月分速報からの改訂状況）]]></title>
+  <link>https://www.esri.cao.go.jp/jp/stat/di/di.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-26T13:18:00+09:00</dc:date>
+  <dc:subject>統計情報 経済社会総合研究所景気統計部</dc:subject>
+</item>
+<item rdf:about="https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html">
+  <title><![CDATA[月例経済報告（11月）]]></title>
+  <link>https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-24T16:03:00+09:00</dc:date>
+  <dc:subject>調査報告 政策統括官（経済財政分析担当）</dc:subject>
+</item>
+<item rdf:about="https://www.fsc.go.jp/senmon/sonota/annai/wg_gijutsukikaku_annai_40.html">
+  <title><![CDATA[評価技術企画ワーキンググループ（第40回）の開催について【12月2日開催】]]></title>
+  <link>https://www.fsc.go.jp/senmon/sonota/annai/wg_gijutsukikaku_annai_40.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-24T14:56:00+09:00</dc:date>
+  <dc:subject>開催案内 食品安全委員会事務局</dc:subject>
+</item>
+<item rdf:about="https://www.fsc.go.jp/senmon/nouyaku/annai/nouyaku_annai_dai5_senmon_52.html">
+  <title><![CDATA[農薬第五専門調査会（第52回）の開催について（非公開）【12月2日開催】]]></title>
+  <link>https://www.fsc.go.jp/senmon/nouyaku/annai/nouyaku_annai_dai5_senmon_52.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-24T14:56:00+09:00</dc:date>
+  <dc:subject>開催案内 食品安全委員会事務局</dc:subject>
+</item>
+<item rdf:about="https://survey.gov-online.go.jp">
+  <title><![CDATA[外交に関する世論調査]]></title>
+  <link>https://survey.gov-online.go.jp</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-20T17:05:00+09:00</dc:date>
+  <dc:subject>調査報告 大臣官房政府広報室</dc:subject>
+</item>
+<item rdf:about="https://www.cao.go.jp/consumer/kabusoshiki/kokyoryokin/senmon/094/kaisai/index.html">
+  <title><![CDATA[第94回公共料金等専門調査会【11月27日開催】]]></title>
+  <link>https://www.cao.go.jp/consumer/kabusoshiki/kokyoryokin/senmon/094/kaisai/index.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-20T15:47:00+09:00</dc:date>
+  <dc:subject>開催案内 消費者委員会事務局</dc:subject>
+</item>
+<item rdf:about="https://www.cao.go.jp/consumer/kabusoshiki/ai_technology/015/kaisai/index.html ">
+  <title><![CDATA[第15回人工知能（AI）技術の利用と消費者問題に関する専門調査会【11月26日開催】]]></title>
+  <link>https://www.cao.go.jp/consumer/kabusoshiki/ai_technology/015/kaisai/index.html </link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-19T15:40:00+09:00</dc:date>
+  <dc:subject>開催案内 消費者委員会事務局</dc:subject>
+</item>
+<item rdf:about="https://www.fsc.go.jp/iinkai_annai/annai/annai1043.html">
+  <title><![CDATA[食品安全委員会（第1043回）の開催について【11月24日開催】]]></title>
+  <link>https://www.fsc.go.jp/iinkai_annai/annai/annai1043.html</link>
+  <dc:creator>内閣府</dc:creator>
+  <dc:date>2026-11-19T13:35:00+09:00</dc:date>
+  <dc:subject>開催案内 食品安全委員会事務局</dc:subject>
+</item>
+</rdf:RDF>
+
