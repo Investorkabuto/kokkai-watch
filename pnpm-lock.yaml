@@ -37,16 +37,6 @@ importers:
         specifier: ^4.20260702.1
         version: 4.20260702.1
 
-  workers/collector:
-    dependencies:
-      '@kokkai-watch/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-    devDependencies:
-      '@cloudflare/workers-types':
-        specifier: ^4.20260702.1
-        version: 4.20260702.1
-
 packages:
 
   '@cloudflare/kv-asset-handler@0.5.1':

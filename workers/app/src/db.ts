@@ -3,6 +3,8 @@ import type { BillStage } from "@kokkai-watch/core";
 
 export interface Env {
   DB: D1Database;
+  /** 収集ジョブの手動実行用トークン(`wrangler secret put ADMIN_TOKEN`) */
+  ADMIN_TOKEN?: string;
 }
 
 export interface BillRow {
@@ -206,6 +208,9 @@ export async function timeline(
 }
 
 export async function lastUpdated(db: D1Database): Promise<string | null> {
-  const r = await db.prepare("SELECT max(finished_at) AS t FROM collector_runs WHERE ok = 1").first<{ t: string | null }>();
+  // 主キーの降順で最初の成功を探す(テーブル全体を走査しないように)
+  const r = await db
+    .prepare("SELECT finished_at AS t FROM collector_runs WHERE ok = 1 ORDER BY id DESC LIMIT 1")
+    .first<{ t: string | null }>();
   return r?.t ?? null;
 }

@@ -47,7 +47,7 @@ kokkai-watch はそれらを **1本の時系列** に並べ、つながりを見
 ```
                     ┌──────────────────────────── Cloudflare ────────────────────────────┐
  一次資料            │                                                                    │
- ・国会会議録API ───▶│  [collector Worker]  Cron Triggers + Queues                        │
+ ・国会会議録API ───▶│  [app Worker]  Cron Triggers + Queues                              │
  ・衆参 議案ページ   │     収集 → 正規化 → D1 に保存 / 原文スナップショットを R2 に保存     │
  ・省庁 RSS          │     話題検知(ニュース見出し→法律名抽出)→ topics に登録            │
  ・e-Gov 法令API     │                         │                                          │
@@ -68,7 +68,7 @@ kokkai-watch はそれらを **1本の時系列** に並べ、つながりを見
 
 | サービス | 用途 |
 |---|---|
-| Workers | app(画面 + 公開API。フェーズ2で Ingest API を追加)、collector(収集) |
+| Workers | kokkai-watch の1つ(画面 + 公開API + Cron による収集。フェーズ2で Ingest API を追加) |
 | Cron Triggers | 定期収集(会議録・議案・RSS)、話題検知、再検証 |
 | Queues | 収集ジョブの分割(フェーズ0では未使用。1回あたりの取得件数に上限を設けて対応) |
 | D1 | メインの DB(SQLite)。FTS5 で全文検索 |
@@ -79,14 +79,15 @@ kokkai-watch はそれらを **1本の時系列** に並べ、つながりを見
 ### 技術スタック
 
 - 言語: TypeScript
-- app / collector: Hono(画面は Hono JSX による SSR)
+- Worker: Hono(画面は Hono JSX による SSR)
 - DB: D1。マイグレーションは SQL ファイル(`migrations/`)を `wrangler d1 migrations` で管理
 - OGP 画像: Satori 系(workers-og など)を予定
 - 構成: pnpm workspaces のモノレポ
 
 フェーズ0で当初案から変えた点:
 
-- **Worker は2つ**(app と collector)。画面と API を1つの Worker にまとめ、運用を単純にした
+- **Worker は1つ**。画面・API・定期収集をまとめた。Cloudflare Workers Builds は接続した1つの Worker 名でしか
+  デプロイできないため(別名の Worker は上書きされる)、収集用 Worker を分けない構成にした
 - **画面は Astro ではなく Hono JSX**。依存を減らし、Workers 上で確実に動く構成を優先した。
   特集ページなど表現が凝ったものが必要になった段階で、Astro などへの移行を再検討する
 - **ORM(Drizzle)は使わず SQL を直接書く**。テーブル数が少ないうちは素の SQL の方が見通しが良い
@@ -94,8 +95,7 @@ kokkai-watch はそれらを **1本の時系列** に並べ、つながりを見
 ```
 kokkai-watch/
 ├─ packages/core/       パーサ・共通ロジック(衆議院の議案、会議録API、RSS、和暦、進み具合)
-├─ workers/app/         画面(SSR)+ 公開API
-├─ workers/collector/   Cron による収集
+├─ workers/app/         画面(SSR)+ 公開API + Cron による収集(src/collector/)
 ├─ migrations/          D1 マイグレーション
 └─ docs/
 ```
