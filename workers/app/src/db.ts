@@ -5,6 +5,8 @@ export interface Env {
   DB: D1Database;
   /** 収集ジョブの手動実行用トークン(`wrangler secret put ADMIN_TOKEN`) */
   ADMIN_TOKEN?: string;
+  /** Muse(AI)向け Ingest API のトークン(`wrangler secret put INGEST_TOKEN`) */
+  INGEST_TOKEN?: string;
 }
 
 export interface BillRow {

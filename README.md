@@ -8,8 +8,11 @@
 
 ```
 packages/core/       一次資料のパーサ(衆議院の議案・審議経過、会議録API、省庁RSS)と共通ロジック
-workers/app/         Worker 本体。画面(Hono JSX による SSR)と公開 API を返し、
-                     Cron Triggers で一次資料を定期収集して D1 に保存する(src/collector/)
+workers/app/         Worker 本体
+  src/index.tsx        画面(Hono JSX による SSR)と公開 API
+  src/stories.tsx      特集ページと誤りの報告
+  src/ingest.ts        Muse(AI)向けの投稿 API(/ingest/v1)
+  src/collector/       Cron Triggers による定期収集(議案・会議録・省庁RSS・話題検知・一次資料の収集)
 migrations/          D1 のマイグレーション(SQL)
 ```
 
@@ -40,6 +43,28 @@ for job in bills meetings announcements; do curl -s -X POST -H "Authorization: B
 ```
 
 ブラウザで http://localhost:8787 を開きます。
+
+## 特集記事の投稿 API(Muse 向け)
+
+AI(Muse)は `/ingest/v1` の API で、話題の取得 → 一次資料の取得 → 記事の投稿を行います。
+すべてのリクエストに `Authorization: Bearer <INGEST_TOKEN>` が必要です。
+投稿された記事はサーバー側で自動検証され(`packages/core/src/verify.ts`)、合格したものだけが `/stories/<slug>` で公開されます。
+
+| メソッド・パス | 内容 |
+|---|---|
+| `GET /ingest/v1/guide` | 執筆ガイド(手順・JSON 形式・ルール・検証項目)。Muse にはまずこれを読ませる |
+| `GET /ingest/v1/topics?status=open` | 執筆対象の話題(ニュースから自動検知、または手動登録) |
+| `POST /ingest/v1/topics` | 話題を登録(`{"keyword":"不同意性交等罪"}`)し、一次資料を収集 |
+| `POST /ingest/v1/topics/:id/collect` | 一次資料を再収集 |
+| `GET /ingest/v1/topics/:id/sources` | 記事に使える一次資料(会議録の発言本文、審議経過、省庁発表) |
+| `POST /ingest/v1/stories` | 記事を投稿。不合格は 422 と修正点(issues)、合格は 201 と公開 URL |
+| `GET /ingest/v1/submissions/:id` | 投稿の検証結果 |
+
+ローカルでは `INGEST_TOKEN=local-ingest-token`(`.dev.vars`)で試せます。
+
+```bash
+curl -s -H "Authorization: Bearer local-ingest-token" localhost:8787/ingest/v1/guide
+```
 
 テストと型チェック:
 
@@ -74,13 +99,19 @@ D1 の `database_id` は設定ファイルに書かず、Wrangler が `database_
 
 デプロイ後は Cron Triggers により自動で収集されます(省庁RSS: 毎時、議案: 3時間ごと、会議録: 6時間ごと)。
 
+### 秘密の値(トークン)の設定
+
+Cloudflare のダッシュボードで Workers & Pages → `kokkai-watch` → Settings → Variables and Secrets から、
+種類「Secret」で次を登録します(値は推測されにくい長い文字列にします)。
+
+| 名前 | 用途 |
+|---|---|
+| `INGEST_TOKEN` | Muse(AI)が投稿 API(`/ingest/v1`)を使うためのトークン |
+| `ADMIN_TOKEN` | 収集ジョブの手動実行(`/admin/run/{job}`)用。任意 |
+
 ### 収集の手動実行(任意)
 
-手動実行用のトークンを設定すると、Cron を待たずにデータを入れられます。
-
-```bash
-cd workers/app && npx wrangler secret put ADMIN_TOKEN
-```
+`ADMIN_TOKEN` を設定すると、Cron を待たずにデータを入れられます。
 
 ```bash
 curl -X POST -H "Authorization: Bearer <トークン>" https://kokkai-watch.<サブドメイン>.workers.dev/admin/run/bills
