@@ -134,8 +134,7 @@ export async function collectSourcesForTopic(env: Env, topicId: string): Promise
     });
     for (const e of eventsByBill.get(b.id) ?? []) {
       const label = STAGE_LABEL[e.stage] ?? e.stage;
-      const parts = [jpDate(e.date), e.house || null, label];
-      if (e.stage === "referred" && e.committee) parts.push(`(${e.committee}委員会)`);
+      const parts = [jpDate(e.date), e.house || null, e.stage === "referred" && e.committee ? `${label}(${e.committee}委員会)` : label];
       if (e.stage === "promulgated" && e.result) parts.push(`法律第${e.result}号`);
       else if (e.result) parts.push(e.result);
       const body = `${b.title}: ${parts.filter(Boolean).join(" ")}`;
