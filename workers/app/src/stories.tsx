@@ -100,7 +100,7 @@ function AiBadge() {
       <span class="ai-badge">AI生成</span>
       <p class="ai-note">
         この記事は AI が一次資料のみをもとに作成し、自動検証に合格したものです。
-        <a href="/about">仕組みについて</a>
+        <a href="/about#ai">仕組みについて</a>
       </p>
     </div>
   );
