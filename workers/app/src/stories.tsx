@@ -41,6 +41,14 @@ function billIdOf(s: StorySourceRow): string | null {
   return s.id.match(/^src_be_(\d+-[a-z]+-\d+)_/)?.[1] ?? null;
 }
 
+const BILL_KIND_LABEL: Record<string, string> = { shu: "衆法", san: "参法", kaku: "閣法", joyaku: "条約" };
+
+/** 法案 ID(例: 221-shu-1)→「衆法 第221回 1号」 */
+function billLabel(id: string): string {
+  const [session, kind, number] = id.split("-");
+  return `${BILL_KIND_LABEL[kind ?? ""] ?? kind} 第${session}回 ${number}号`;
+}
+
 /** ISO 日時 → YYYY-MM-DD(日本時間) */
 function jstDate(iso: string): string {
   return new Date(Date.parse(iso) + 9 * 3600_000).toISOString().slice(0, 10);
@@ -208,7 +216,7 @@ function StoryPage(p: {
           <h2>関連する法案</h2>
           {bills.map((id) => (
             <a class="btn" href={`/bills/${id}`}>
-              {p.billTitles.get(id) ?? id} の審議状況 →
+              {p.billTitles.get(id) ?? id}({billLabel(id)})の審議状況 →
             </a>
           ))}
         </>
