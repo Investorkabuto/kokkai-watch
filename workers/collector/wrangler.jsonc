@@ -1,0 +1,20 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "kokkai-watch-collector",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "observability": { "enabled": true },
+  "triggers": {
+    // UTC。省庁RSS: 毎時5分 / 衆議院の議案: 3時間ごと / 会議録: 6時間ごと
+    "crons": ["5 * * * *", "20 */3 * * *", "40 */6 * * *"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "kokkai-watch",
+      // `wrangler d1 create kokkai-watch` で発行された ID に置き換える
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "../../migrations"
+    }
+  ]
+}

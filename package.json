@@ -1,0 +1,23 @@
+{
+  "name": "kokkai-watch",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "db:migrate:local": "wrangler d1 migrations apply kokkai-watch --local --persist-to .wrangler/state -c workers/app/wrangler.jsonc",
+    "dev:app": "pnpm --filter @kokkai-watch/app dev",
+    "dev:collector": "pnpm --filter @kokkai-watch/collector dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.168.0",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ]
+  }
+}

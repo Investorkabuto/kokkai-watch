@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>
+<rdf:RDF xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="ja">
+<channel rdf:about="https://www.soumu.go.jp/news.rdf">
+<title>総務省 ホームページ新着情報</title>
+<link>https://www.soumu.go.jp/</link>
+<description>総務省 ホームページ新着情報</description>
+<items>
+<rdf:Seq>
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/kenkyu/info-accessibility-portal/02ryutsu06_04000265.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/singi/kanmin/02shingi06_02001108.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban09_04000751.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban16_04000972.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/menu_news/s-news/01ryutsu17_02000139.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/housou_system/02ryutsu08_04000627.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/singi/seiji_tekisei/r8dai2kaitekiseiiinkai.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/singi/chihou_seido/singi/02gyosei01_04000511_00014.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/kenkyu/ICT_services/02kiban18_02000523.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/menu_news/gyouji/02ryutsu06_04000264.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/hyouka/hyokashingikai_n/hyouka_261125000193843.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban14_04001381.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/yusei/yusei_gyousei/02ryutsu01_04000527.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/menu_syokai/saiyou/detail/02toukatsu01_04000559.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/kenkyu/data_protection/02kiban18_02000524.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000688.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/kenkyu/digital_shokadai/02ryutsu02_04000613.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/main_sosiki/singi/toukei/sangyou/kaigi/02shingi05_02000847.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000687.html" />
+<rdf:li rdf:resource="https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000686.html" />
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/kenkyu/info-accessibility-portal/02ryutsu06_04000265.html">
+<title>みんなの公共サイト運用ガイドライン改定に関する研究会（第3回）配布資料</title>
+<description>みんなの公共サイト運用ガイドライン改定に関する研究会（第3回）配布資料</description>
+<link>https://www.soumu.go.jp/main_sosiki/kenkyu/info-accessibility-portal/02ryutsu06_04000265.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/singi/kanmin/02shingi06_02001108.html">
+<title>第775回　入札監理小委員会（開催案内）</title>
+<description>第775回　入札監理小委員会（開催案内）</description>
+<link>https://www.soumu.go.jp/main_sosiki/singi/kanmin/02shingi06_02001108.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban09_04000751.html">
+<title>情報通信審議会　情報通信技術分科会　電波有効利用委員会（第18回）開催案内</title>
+<description>情報通信審議会　情報通信技術分科会　電波有効利用委員会（第18回）開催案内</description>
+<link>https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban09_04000751.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban16_04000972.html">
+<title>情報通信審議会　情報通信技術分科会　電波利用環境委員会　CISPR　B作業班（第30回）開催案内</title>
+<description>情報通信審議会　情報通信技術分科会　電波利用環境委員会　CISPR　B作業班（第30回）開催案内</description>
+<link>https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban16_04000972.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/menu_news/s-news/01ryutsu17_02000139.html">
+<title>特定信書便事業への参入に関する許認可等</title>
+<description>特定信書便事業への参入に関する許認可等</description>
+<link>https://www.soumu.go.jp/menu_news/s-news/01ryutsu17_02000139.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/housou_system/02ryutsu08_04000627.html">
+<title>情報通信審議会　情報通信技術分科会　放送システム委員会（第85回）</title>
+<description>情報通信審議会　情報通信技術分科会　放送システム委員会（第85回）</description>
+<link>https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/housou_system/02ryutsu08_04000627.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/singi/seiji_tekisei/r8dai2kaitekiseiiinkai.html">
+<title>令和8年度第2回政治資金適正化委員会</title>
+<description>令和8年度第2回政治資金適正化委員会</description>
+<link>https://www.soumu.go.jp/main_sosiki/singi/seiji_tekisei/r8dai2kaitekiseiiinkai.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/singi/chihou_seido/singi/02gyosei01_04000511_00014.html">
+<title>第34次地方制度調査会第12回専門小委員会</title>
+<description>第34次地方制度調査会第12回専門小委員会</description>
+<link>https://www.soumu.go.jp/main_sosiki/singi/chihou_seido/singi/02gyosei01_04000511_00014.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/kenkyu/ICT_services/02kiban18_02000523.html">
+<title>不適正利用対策に関するワーキンググループ（第16回）</title>
+<description>不適正利用対策に関するワーキンググループ（第16回）</description>
+<link>https://www.soumu.go.jp/main_sosiki/kenkyu/ICT_services/02kiban18_02000523.html</link>
+<dc:date>2026-11-26T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/menu_news/gyouji/02ryutsu06_04000264.html">
+<title>デジタル・ディバイド解消に 向けたノウハウ共有フォーラムのお知らせ</title>
+<description>デジタル・ディバイド解消に 向けたノウハウ共有フォーラムのお知らせ</description>
+<link>https://www.soumu.go.jp/menu_news/gyouji/02ryutsu06_04000264.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/hyouka/hyokashingikai_n/hyouka_261125000193843.html">
+<title>第49回政策評価審議会（第47回政策評価制度部会と合同）（令和8年12月2日）の開催について</title>
+<description>第49回政策評価審議会（第47回政策評価制度部会と合同）（令和8年12月2日）の開催について</description>
+<link>https://www.soumu.go.jp/main_sosiki/hyouka/hyokashingikai_n/hyouka_261125000193843.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban14_04001381.html">
+<title>情報通信審議会　情報通信技術分科会　新世代モバイル通信システム委員会　ローカル5G検討作業班（第27回）開催案内</title>
+<description>情報通信審議会　情報通信技術分科会　新世代モバイル通信システム委員会　ローカル5G検討作業班（第27回）開催案内</description>
+<link>https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/kaisai/02kiban14_04001381.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/yusei/yusei_gyousei/02ryutsu01_04000527.html">
+<title>情報通信行政・郵政行政審議会　郵政行政分科会（第107回）配布資料・議事概要・議事録</title>
+<description>情報通信行政・郵政行政審議会　郵政行政分科会（第107回）配布資料・議事概要・議事録</description>
+<link>https://www.soumu.go.jp/main_sosiki/joho_tsusin/policyreports/joho_tsusin/yusei/yusei_gyousei/02ryutsu01_04000527.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/menu_syokai/saiyou/detail/02toukatsu01_04000559.html">
+<title>政策統括官（統計制度担当）統計企画管理官室 非常勤職員採用情報</title>
+<description>政策統括官（統計制度担当）統計企画管理官室 非常勤職員採用情報</description>
+<link>https://www.soumu.go.jp/menu_syokai/saiyou/detail/02toukatsu01_04000559.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/kenkyu/data_protection/02kiban18_02000524.html">
+<title>フロンティアAI時代の通信事業におけるデータの保護・セキュリティの在り方に関する検討会（第4回）</title>
+<description>フロンティアAI時代の通信事業におけるデータの保護・セキュリティの在り方に関する検討会（第4回）</description>
+<link>https://www.soumu.go.jp/main_sosiki/kenkyu/data_protection/02kiban18_02000524.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000688.html">
+<title>令和8年熊本地震による被災地方公共団体における職員採用情報</title>
+<description>令和8年熊本地震による被災地方公共団体における職員採用情報</description>
+<link>https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000688.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/kenkyu/digital_shokadai/02ryutsu02_04000613.html">
+<title>デジタル空間における情報流通の諸課題への対処に関する検討会 デジタル広告ワーキンググループ（第19回）配布資料</title>
+<description>デジタル空間における情報流通の諸課題への対処に関する検討会 デジタル広告ワーキンググループ（第19回）配布資料</description>
+<link>https://www.soumu.go.jp/main_sosiki/kenkyu/digital_shokadai/02ryutsu02_04000613.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/main_sosiki/singi/toukei/sangyou/kaigi/02shingi05_02000847.html">
+<title>統計委員会　第150回産業統計部会</title>
+<description>統計委員会　第150回産業統計部会</description>
+<link>https://www.soumu.go.jp/main_sosiki/singi/toukei/sangyou/kaigi/02shingi05_02000847.html</link>
+<dc:date>2026-11-25T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000687.html">
+<title>令和8年熊本地震による被災地方公共団体における職員採用情報</title>
+<description>令和8年熊本地震による被災地方公共団体における職員採用情報</description>
+<link>https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000687.html</link>
+<dc:date>2026-11-24T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+<item rdf:about="https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000686.html">
+<title>令和6年能登半島地震による被災地方公共団体における職員採用情報</title>
+<description>令和6年能登半島地震による被災地方公共団体における職員採用情報</description>
+<link>https://www.soumu.go.jp/menu_kyotsuu/important/kinkyu02_000686.html</link>
+<dc:date>2026-11-24T05:00:00+09:00</dc:date>
+<dc:subject>新着情報</dc:subject>
+<dc:creator>総務省</dc:creator>
+<dc:publisher>総務省</dc:publisher>
+<dc:rights>総務省</dc:rights>
+</item>
+</rdf:RDF>

@@ -56,11 +56,11 @@ kokkai-watch はそれらを **1本の時系列** に並べ、つながりを見
  (見出しのみ)       │                    │   D1    │   │ R2 │   │ KV │                    │
                     │                    └─────────┘   └────┘   └────┘                    │
                     │                         ▲                                          │
-   Muse(AI) ───────▶│  [api Worker]  Ingest API(認証あり)                               │
+   Muse(AI) ───────▶│  [app Worker]  Ingest API(認証あり)                               │
    話題取得・資料取得 │     記事受け取り → 自動検証 → 合格なら公開 / 不合格なら理由を返す   │
    記事投稿          │                         │                                          │
                     │                         ▼                                          │
-   利用者(スマホ)──▶│  [web Worker]  SSR + 静的アセット、OGP画像生成、広告枠              │
+   利用者(スマホ)──▶│  [app Worker]  SSR + 静的アセット、OGP画像生成、広告枠              │
                     └────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -68,30 +68,35 @@ kokkai-watch はそれらを **1本の時系列** に並べ、つながりを見
 
 | サービス | 用途 |
 |---|---|
-| Workers | web(画面)、api(公開API + Ingest API)、collector(収集) |
+| Workers | app(画面 + 公開API。フェーズ2で Ingest API を追加)、collector(収集) |
 | Cron Triggers | 定期収集(会議録・議案・RSS)、話題検知、再検証 |
-| Queues | 収集ジョブの分割(1回の Worker 実行の CPU 時間制限を避ける) |
+| Queues | 収集ジョブの分割(フェーズ0では未使用。1回あたりの取得件数に上限を設けて対応) |
 | D1 | メインの DB(SQLite)。FTS5 で全文検索 |
 | R2 | 一次資料の原文スナップショット(HTML/JSON/PDF)、OGP画像 |
 | KV | ページ・API レスポンスのキャッシュ、レート制限 |
 | Turnstile | 「誤りを報告」フォームのボット対策 |
 
-### 技術スタック(案)
+### 技術スタック
 
 - 言語: TypeScript
-- api / collector: Hono
-- web: Astro(Cloudflare アダプタ、SSR + 一部静的生成)※ React Router v7 も候補
-- DB アクセス: Drizzle ORM(D1 対応、マイグレーション管理)
-- OGP 画像: Satori 系(workers-og など)
+- app / collector: Hono(画面は Hono JSX による SSR)
+- DB: D1。マイグレーションは SQL ファイル(`migrations/`)を `wrangler d1 migrations` で管理
+- OGP 画像: Satori 系(workers-og など)を予定
 - 構成: pnpm workspaces のモノレポ
+
+フェーズ0で当初案から変えた点:
+
+- **Worker は2つ**(app と collector)。画面と API を1つの Worker にまとめ、運用を単純にした
+- **画面は Astro ではなく Hono JSX**。依存を減らし、Workers 上で確実に動く構成を優先した。
+  特集ページなど表現が凝ったものが必要になった段階で、Astro などへの移行を再検討する
+- **ORM(Drizzle)は使わず SQL を直接書く**。テーブル数が少ないうちは素の SQL の方が見通しが良い
 
 ```
 kokkai-watch/
-├─ apps/web/            Astro(画面)
-├─ workers/api/         Hono(公開API + Ingest API + 検証)
-├─ workers/collector/   Hono(Cron + Queues による収集・話題検知)
-├─ packages/db/         Drizzle スキーマ・マイグレーション
-├─ packages/core/       共通の型、検証ロジック、パーサ
+├─ packages/core/       パーサ・共通ロジック(衆議院の議案、会議録API、RSS、和暦、進み具合)
+├─ workers/app/         画面(SSR)+ 公開API
+├─ workers/collector/   Cron による収集
+├─ migrations/          D1 マイグレーション
 └─ docs/
 ```
 
@@ -113,7 +118,7 @@ kokkai-watch/
 | 法案・審議経過(衆) | 衆議院「議案の一覧」 | HTML(Shift_JIS) | 取得可。スクレイピング | 1日数回 |
 | 法案・審議経過(参) | 参議院「議案情報」 | HTML | 未確認 | 1日数回 |
 | 法令本文・施行 | e-Gov 法令API v2 | JSON | 応答あり | 1日1回 |
-| 省庁発表 | 各省庁 RSS(財務省・デジタル庁などで確認) | RSS/Atom | 一部確認。首相官邸は試したURLが404で要調査 | 1時間ごと |
+| 省庁発表 | 各省庁 RSS | RSS/RDF/Atom | 8府省庁で取得可(内閣府・総務省・財務省・文科省・厚労省・農水省・国交省・デジタル庁)。経産省・法務省・外務省・防衛省は 403、環境省・こども家庭庁・首相官邸は試したURLが404で要調査 | 1時間ごと |
 | 予算 | 財務省 予算・決算資料 | PDF/Excel | 半自動での整理が必要 | 予算の節目ごと |
 | 法制審議会など | 法務省ほか各審議会のページ | HTML/PDF | 未確認 | 話題ごと |
 | 話題検知 | ニュース RSS(NHK、Google ニュースなど) | RSS | 未確認 | 1時間ごと |
@@ -121,7 +126,7 @@ kokkai-watch/
 ### 要検証事項
 
 - 各サイトの利用規約・クローリングの可否、アクセス間隔の配慮(User-Agent は汎用名、低頻度)
-- Workers 上の `TextDecoder` で Shift_JIS がデコードできるか(できなければ変換ライブラリを同梱)
+- ~~Workers 上の `TextDecoder` で Shift_JIS がデコードできるか~~ → ローカルの workerd でデコードできることを確認済み
 - 会議録 API のレート制限
 
 ### ニュースの扱い(著作権)
@@ -347,8 +352,8 @@ Muse は「話題を取得 → 資料を取得 → 記事を投稿」という�
 
 | フェーズ | 内容 |
 |---|---|
-| 0. 土台 | モノレポ、D1 スキーマ、Workers のデプロイ、CI |
-| 1. 収集 | 会議録 API、衆議院の議案、主要省庁の RSS → 法案トラッカー + タイムライン |
+| 0. 土台 | モノレポ、D1 スキーマ、Workers のデプロイ、CI(**実装済み**。デプロイは未実施) |
+| 1. 収集 | 会議録 API、衆議院の議案、主要省庁の RSS → 法案トラッカー + タイムライン(**最初の版を実装済み**) |
 | 2. 特集 | 話題検知、sources カタログ、Ingest API、自動検証、特集ページ、OGP |
 | 3. 公開準備 | 独自ドメイン、編集方針ページ、誤り報告、AdSense 申請 |
 | 4. 拡充 | 参議院、予算の可視化、e-Gov 法令、ウォッチリスト・通知 |
