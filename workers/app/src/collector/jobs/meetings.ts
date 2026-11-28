@@ -1,6 +1,6 @@
 /** 国会会議録検索システムから会議と発言(メタデータ)を収集する */
 import { meetingListUrl, parseMeetingList, toJstDate, type MeetingData } from "@kokkai-watch/core";
-import { batchInChunks, fetchJson, nowIso, sleep, type Env, type JobResult } from "../util";
+import { fetchJson, nowIso, sleep, writeJsonRows, type Env, type JobResult } from "../util";
 
 /** 会議録は公開まで日数がかかるため、過去30日分を毎回見直す */
 const LOOKBACK_DAYS = 30;
@@ -29,29 +29,38 @@ export async function collectMeetings(env: Env, opts: { from?: string; until?: s
   for (const r of results) existing.set(r.id, r.speech_count);
 
   const now = nowIso();
-  const stmts: D1PreparedStatement[] = [];
-  let written = 0;
-  for (const m of meetings) {
-    if (existing.get(m.id) === m.speeches.length) continue;
-    written++;
-    stmts.push(
-      env.DB.prepare(
-        `INSERT INTO meetings (id, session, house, name, issue, date, url, pdf_url, speech_count, fetched_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-         ON CONFLICT(id) DO UPDATE SET name = excluded.name, issue = excluded.issue, url = excluded.url,
-           pdf_url = excluded.pdf_url, speech_count = excluded.speech_count, fetched_at = excluded.fetched_at`,
-      ).bind(m.id, m.session, m.house, m.name, m.issue, m.date, m.url, m.pdfUrl, m.speeches.length, now),
-    );
-    for (const s of m.speeches) {
-      stmts.push(
-        env.DB.prepare(
-          `INSERT INTO speeches (id, meeting_id, speech_order, speaker, url) VALUES (?, ?, ?, ?, ?)
-           ON CONFLICT(id) DO UPDATE SET speaker = excluded.speaker, url = excluded.url`,
-        ).bind(s.id, m.id, s.order, s.speaker, s.url),
-      );
-    }
-  }
-  await batchInChunks(env.DB, stmts, 100);
+  const toWrite = meetings.filter((m) => existing.get(m.id) !== m.speeches.length);
+  const written = toWrite.length;
+  // 会議と発言はそれぞれ JSON にまとめて書き込む(発言数千件でも数文で済む)
+  await writeJsonRows(
+    env.DB,
+    `INSERT INTO meetings (id, session, house, name, issue, date, url, pdf_url, speech_count, fetched_at)
+     SELECT value->>'$.id', value->>'$.session', value->>'$.house', value->>'$.name', value->>'$.issue',
+       value->>'$.date', value->>'$.url', value->>'$.pdfUrl', value->>'$.speechCount', ?2
+     FROM json_each(?1) WHERE true
+     ON CONFLICT(id) DO UPDATE SET name = excluded.name, issue = excluded.issue, url = excluded.url,
+       pdf_url = excluded.pdf_url, speech_count = excluded.speech_count, fetched_at = excluded.fetched_at`,
+    toWrite.map((m) => ({
+      id: m.id,
+      session: m.session,
+      house: m.house,
+      name: m.name,
+      issue: m.issue,
+      date: m.date,
+      url: m.url,
+      pdfUrl: m.pdfUrl,
+      speechCount: m.speeches.length,
+    })),
+    [now],
+  );
+  await writeJsonRows(
+    env.DB,
+    `INSERT INTO speeches (id, meeting_id, speech_order, speaker, url)
+     SELECT value->>'$.id', value->>'$.meetingId', value->>'$.order', value->>'$.speaker', value->>'$.url'
+     FROM json_each(?1) WHERE true
+     ON CONFLICT(id) DO UPDATE SET speaker = excluded.speaker, url = excluded.url`,
+    toWrite.flatMap((m) => m.speeches.map((sp) => ({ id: sp.id, meetingId: m.id, order: sp.order, speaker: sp.speaker, url: sp.url }))),
+  );
 
   return { summary: `${from}〜 の会議 ${meetings.length}/${total} 件を確認、${written} 件を保存` };
 }

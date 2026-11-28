@@ -3,7 +3,7 @@
  * sources(特集に使える資料のカタログ)に登録して topic_sources で話題に紐づける。
  */
 import { parseSpeechList, searchStem, speechListUrl, STAGE_LABEL, type BillStage } from "@kokkai-watch/core";
-import { batchInChunks, fetchJson, nowIso, sha1Hex, sleep, type Env, type JobResult } from "../util";
+import { fetchJson, nowIso, sha1Hex, sleep, writeJsonRows, type Env, type JobResult } from "../util";
 
 /** 会議録の発言を取得するページ数(1ページ100件、新しい順) */
 const SPEECH_PAGES = 2;
@@ -40,7 +40,8 @@ export async function collectSourcesForTopic(env: Env, topicId: string): Promise
   const stem = searchStem(topic.keyword);
   const now = nowIso();
   const sources: SourceRow[] = [];
-  const stmts: D1PreparedStatement[] = [];
+  const meetingRows = new Map<string, Record<string, unknown>>();
+  const speechRows: Record<string, unknown>[] = [];
 
   // ---- 会議録の発言 ----
   let speechTotal = 0;
@@ -49,18 +50,25 @@ export async function collectSourcesForTopic(env: Env, topicId: string): Promise
     const res = parseSpeechList(await fetchJson(speechListUrl({ any: stem, start, max: 100 })));
     speechTotal = res.total;
     for (const s of res.speeches) {
-      stmts.push(
-        env.DB.prepare(
-          `INSERT OR IGNORE INTO meetings (id, session, house, name, issue, date, url, pdf_url, speech_count, fetched_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, NULL, 0, ?)`,
-        ).bind(s.issueID, s.session, s.house, s.meetingName, s.issue, s.date, s.meetingUrl, now),
-        env.DB.prepare(
-          `INSERT INTO speeches (id, meeting_id, speech_order, speaker, url, text, speaker_group, speaker_position)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-           ON CONFLICT(id) DO UPDATE SET text = excluded.text, speaker_group = excluded.speaker_group,
-             speaker_position = excluded.speaker_position`,
-        ).bind(s.speechID, s.issueID, s.order, s.speaker, s.url, s.text, s.speakerGroup, s.speakerPosition),
-      );
+      meetingRows.set(s.issueID, {
+        id: s.issueID,
+        session: s.session,
+        house: s.house,
+        name: s.meetingName,
+        issue: s.issue,
+        date: s.date,
+        url: s.meetingUrl,
+      });
+      speechRows.push({
+        id: s.speechID,
+        meetingId: s.issueID,
+        order: s.order,
+        speaker: s.speaker,
+        url: s.url,
+        text: s.text,
+        group: s.speakerGroup,
+        position: s.speakerPosition,
+      });
       sources.push({
         id: `src_sp_${s.speechID}`,
         kind: "speech",
@@ -173,34 +181,62 @@ export async function collectSourcesForTopic(env: Env, topicId: string): Promise
     });
   }
 
-  // ---- sources / topic_sources へ保存 ----
+  // ---- 保存(D1 のクエリ数上限への対策として、各テーブルとも JSON にまとめて書き込む) ----
+  // 発言本文が長いと JSON が大きくなるため、writeJsonRows が自動で数文に分割する
+  await writeJsonRows(
+    env.DB,
+    `INSERT OR IGNORE INTO meetings (id, session, house, name, issue, date, url, pdf_url, speech_count, fetched_at)
+     SELECT value->>'$.id', value->>'$.session', value->>'$.house', value->>'$.name', value->>'$.issue',
+       value->>'$.date', value->>'$.url', NULL, 0, ?2
+     FROM json_each(?1)`,
+    [...meetingRows.values()],
+    [now],
+  );
+  await writeJsonRows(
+    env.DB,
+    `INSERT INTO speeches (id, meeting_id, speech_order, speaker, url, text, speaker_group, speaker_position)
+     SELECT value->>'$.id', value->>'$.meetingId', value->>'$.order', value->>'$.speaker', value->>'$.url',
+       value->>'$.text', value->>'$.group', value->>'$.position'
+     FROM json_each(?1) WHERE true
+     ON CONFLICT(id) DO UPDATE SET text = excluded.text, speaker_group = excluded.speaker_group,
+       speaker_position = excluded.speaker_position`,
+    speechRows,
+  );
+  const sourceRows: Record<string, unknown>[] = [];
   for (const s of sources) {
-    stmts.push(
-      env.DB.prepare(
-        `INSERT INTO sources (id, kind, ref_id, title, date, url, body, speaker, meta_json, content_hash, fetched_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-         ON CONFLICT(id) DO UPDATE SET title = excluded.title, date = excluded.date, url = excluded.url,
-           body = excluded.body, speaker = excluded.speaker, meta_json = excluded.meta_json,
-           content_hash = excluded.content_hash, fetched_at = excluded.fetched_at`,
-      ).bind(
-        s.id,
-        s.kind,
-        s.refId,
-        s.title,
-        s.date,
-        s.url,
-        s.body,
-        s.speaker,
-        s.meta ? JSON.stringify(s.meta) : null,
-        await sha1Hex(s.body),
-        now,
-      ),
-      env.DB.prepare("INSERT OR IGNORE INTO topic_sources (topic_id, source_id) VALUES (?, ?)").bind(topic.id, s.id),
-    );
+    sourceRows.push({
+      id: s.id,
+      kind: s.kind,
+      refId: s.refId,
+      title: s.title,
+      date: s.date,
+      url: s.url,
+      body: s.body,
+      speaker: s.speaker,
+      meta: s.meta ? JSON.stringify(s.meta) : null,
+      hash: await sha1Hex(s.body),
+    });
   }
-  stmts.push(env.DB.prepare("UPDATE topics SET sources_collected_at = ? WHERE id = ?").bind(now, topic.id));
-  // 発言本文は長いことがあるため、1回の batch を小さめにする
-  await batchInChunks(env.DB, stmts, 20);
+  await writeJsonRows(
+    env.DB,
+    `INSERT INTO sources (id, kind, ref_id, title, date, url, body, speaker, meta_json, content_hash, fetched_at)
+     SELECT value->>'$.id', value->>'$.kind', value->>'$.refId', value->>'$.title', value->>'$.date',
+       value->>'$.url', value->>'$.body', value->>'$.speaker', value->>'$.meta', value->>'$.hash', ?2
+     FROM json_each(?1) WHERE true
+     ON CONFLICT(id) DO UPDATE SET title = excluded.title, date = excluded.date, url = excluded.url,
+       body = excluded.body, speaker = excluded.speaker, meta_json = excluded.meta_json,
+       content_hash = excluded.content_hash, fetched_at = excluded.fetched_at`,
+    sourceRows,
+    [now],
+  );
+  await writeJsonRows(
+    env.DB,
+    `INSERT OR IGNORE INTO topic_sources (topic_id, source_id)
+     SELECT ?2, value->>'$.id' FROM json_each(?1)`,
+    sources.map((s) => ({ id: s.id })),
+    [topic.id],
+  );
+  await env.DB.prepare("UPDATE topics SET sources_collected_at = ? WHERE id = ?").bind(now, topic.id).run();
 
   const speeches = sources.filter((s) => s.kind === "speech").length;
   const events = sources.filter((s) => s.kind === "bill_event").length;

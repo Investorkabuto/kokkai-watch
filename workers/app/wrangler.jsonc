@@ -8,7 +8,7 @@
   "preview_urls": false,
   "triggers": {
     // UTC。省庁RSS: 毎時5分 / 衆議院の議案: 3時間ごと / 会議録: 6時間ごと
-    // 変更したら src/collector/index.ts の CRON_TO_JOB も合わせる
+    // 変更したら src/collector/index.ts の CRON_TO_JOBS も合わせる
     "crons": ["5 * * * *", "20 */3 * * *", "40 */6 * * *"]
   },
   "d1_databases": [
