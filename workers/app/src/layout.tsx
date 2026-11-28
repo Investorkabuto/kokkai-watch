@@ -68,6 +68,35 @@ h2 a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none}
 .note{font-size:12px;color:var(--muted);margin-top:28px}
 footer{font-size:12px;color:var(--muted);margin:36px 0 0;padding-top:16px;border-top:1px solid var(--line)}
 footer a{color:var(--muted)}
+.ai-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.ai-note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.ai-note a{color:var(--muted)}
+.story-lead{font-size:16px;margin:12px 0 0}
+.story-items{list-style:none;margin:8px 0 0;padding:0 0 0 18px;border-left:2px solid var(--line)}
+.story-items>li{position:relative;padding:0 0 22px 6px}
+.story-items>li::before{content:"";position:absolute;left:-26px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.story-items .d{font-size:13px;color:var(--muted)}
+.story-items h3{font-size:16px;margin:2px 0 6px;line-height:1.5}
+.story-items p{margin:0 0 6px}
+.cite{display:inline-block;font-size:11px;line-height:1;padding:3px 5px;margin-left:2px;border-radius:6px;background:var(--surface-2);color:var(--muted);text-decoration:none;vertical-align:2px;font-feature-settings:"tnum"}
+.cite:active{background:var(--line)}
+.persp{display:grid;gap:10px}
+.persp .card h3{font-size:15px;margin:0 0 6px}
+.persp .card p{margin:0 0 6px;font-size:15px}
+.sources{list-style:none;margin:0;padding:0;counter-reset:none}
+.sources li{padding:10px 0;border-top:1px solid var(--line);font-size:14px;scroll-margin-top:64px}
+.sources li:first-child{border-top:0}
+.sources li:target{background:var(--warn-soft);border-radius:8px;padding:10px 8px}
+.sources .n{font-weight:700;margin-right:6px}
+.sources .k{font-size:12px;color:var(--muted)}
+.sources blockquote{margin:6px 0 0;padding:6px 10px;border-left:3px solid var(--line);color:var(--muted);font-size:13px}
+.report textarea{width:100%;min-height:110px;font:inherit;font-size:15px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--text);resize:vertical}
+.report button{width:100%;margin-top:8px;padding:12px;border-radius:12px;border:0;background:var(--text);color:var(--bg);font:inherit;font-weight:700}
+.feature{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px}
+.feature .t{font-weight:700;font-size:17px;line-height:1.45;margin:6px 0 4px}
+.feature .l{font-size:14px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.feature:active{background:var(--surface-2)}
+.notice{background:var(--warn-soft);color:var(--warn);border-radius:var(--radius);padding:14px 16px;font-size:14px}
 nav.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom)}
 nav.tabbar .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);height:var(--tab-h)}
@@ -97,6 +126,10 @@ export function Layout(props: {
   description?: string;
   tab: Tab;
   updated?: string | null;
+  /** og:type(既定: website) */
+  ogType?: string;
+  /** 構造化データ(JSON-LD)。JSON.stringify されて head に出力される */
+  jsonLd?: unknown;
   children: Child;
 }) {
   const title = props.title ? `${props.title} | kokkai-watch` : "kokkai-watch — 国の動きを、ひとつのタイムラインで";
@@ -111,7 +144,10 @@ export function Layout(props: {
         <meta name="description" content={description} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content={props.ogType ?? "website"} />
+        {props.jsonLd !== undefined && (
+          <script type="application/ld+json">{raw(JSON.stringify(props.jsonLd).replace(/</g, "\\u003c"))}</script>
+        )}
         <meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#121211" media="(prefers-color-scheme: dark)" />
         <style>{raw(CSS)}</style>

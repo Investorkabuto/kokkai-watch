@@ -1,6 +1,8 @@
 import { buildProgress, STAGE_LABEL, type BillStage } from "@kokkai-watch/core";
 import type { AnnouncementRow, BillEventRow, BillFilter, BillRow, MeetingRow, TimelineItem, TimelineKind } from "./db";
 import { formatDay, Layout } from "./layout";
+import { StoryCard } from "./stories";
+import type { StorySummary } from "./storiesDb";
 
 function BillRowItem({ b }: { b: BillRow }) {
   return (
@@ -36,11 +38,23 @@ export function HomePage(p: {
   passed: BillRow[];
   meetings: MeetingRow[];
   announcements: AnnouncementRow[];
+  stories?: StorySummary[];
 }) {
   return (
     <Layout tab="home" updated={p.updated}>
       <h1>国の動きを、ひとつのタイムラインで</h1>
       <p class="lead">国会の審議、法案の進み具合、各省庁の発表を一次資料から集めています。</p>
+
+      {p.stories && p.stories.length > 0 && (
+        <>
+          <h2>
+            特集 <a href="/stories">すべて見る</a>
+          </h2>
+          {p.stories.map((s) => (
+            <StoryCard s={s} />
+          ))}
+        </>
+      )}
 
       <h2>
         審議中の法案 <a href="/bills?status=pending">すべて見る</a>

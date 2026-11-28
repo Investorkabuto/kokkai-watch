@@ -15,6 +15,8 @@ import {
   type TimelineKind,
 } from "./db";
 import { handleManualRun, handleScheduled } from "./collector";
+import { listPublishedStories } from "./storiesDb";
+import { registerStoryRoutes } from "./stories";
 import { AboutPage, BillPage, BillsPage, HomePage, NotFoundPage, TimelinePage } from "./pages";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -34,14 +36,15 @@ app.use("*", async (c, next) => {
 
 app.get("/", async (c) => {
   const db = c.env.DB;
-  const [updated, pending, passed, meetings, announcements] = await Promise.all([
+  const [updated, pending, passed, meetings, announcements, stories] = await Promise.all([
     lastUpdated(db),
     listBills(db, "pending", undefined, 8),
     listBills(db, "passed", undefined, 5),
     recentMeetings(db, 6),
     recentAnnouncements(db, 8),
+    listPublishedStories(db, 3),
   ]);
-  return c.html(<HomePage {...{ updated, pending, passed, meetings, announcements }} />);
+  return c.html(<HomePage {...{ updated, pending, passed, meetings, announcements, stories }} />);
 });
 
 app.get("/bills", async (c) => {
@@ -66,6 +69,8 @@ app.get("/timeline", async (c) => {
   ]);
   return c.html(<TimelinePage updated={updated} kind={kind} items={t.items} nextBefore={t.nextBefore} />);
 });
+
+registerStoryRoutes(app);
 
 app.get("/about", async (c) => c.html(<AboutPage updated={await lastUpdated(c.env.DB)} />));
 
