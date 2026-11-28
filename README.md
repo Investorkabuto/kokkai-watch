@@ -55,20 +55,37 @@ pnpm test && pnpm typecheck
 
 ## Cloudflare へのデプロイ
 
-`main` にマージされると、GitHub Actions(`.github/workflows/deploy.yml`)が自動でデプロイします。
-D1 データベースがまだなければ、ワークフローが作成します。
+Cloudflare の Workers Builds(ダッシュボードから GitHub リポジトリを接続する方式)でデプロイします。
+`main` に push されるたびに自動でデプロイされます。
 
-### 初回の準備(1回だけ)
+### Workers Builds の設定
 
-1. Cloudflare のアカウントを作り、ダッシュボードの「Workers & Pages」を一度開いて workers.dev のサブドメインを決めます。
-2. API トークンを作ります: My Profile → API Tokens → Create Token → テンプレート「Edit Cloudflare Workers」を選び、
-   Permissions に「Account / D1 / Edit」を追加して作成します。
-3. アカウント ID を控えます(ダッシュボードの「Workers & Pages」画面の右側、または URL の `dash.cloudflare.com/<ここ>`)。
-4. GitHub のリポジトリで Settings → Secrets and variables → Actions → New repository secret から、次の2つを登録します。
-   - `CLOUDFLARE_API_TOKEN`: 手順2のトークン
-   - `CLOUDFLARE_ACCOUNT_ID`: 手順3のアカウント ID
-   - (任意)`COLLECTOR_ADMIN_TOKEN`: 収集 Worker を手動実行するための任意の長い文字列
-5. GitHub の Actions タブ → Deploy → Run workflow で実行します(以降は `main` へのマージで自動実行)。
+Workers & Pages → `kokkai-watch` → Settings → Builds で次のように設定します。
+
+| 項目 | 値 |
+|---|---|
+| Root directory | 空欄(リポジトリのルート) |
+| Build command | 空欄 |
+| Deploy command | `pnpm run deploy` |
+
+`pnpm run deploy` は次を順に実行します。
+
+1. 収集 Worker(`kokkai-watch-collector`)をデプロイ。D1 データベース `kokkai-watch` がなければ Wrangler が作成する
+2. 本番 D1 にマイグレーションを適用
+3. アプリ Worker(`kokkai-watch`)をデプロイ
+
+D1 の `database_id` は設定ファイルに書かず、Wrangler が `database_name` で検索して接続します。
 
 デプロイ後は Cron Triggers により自動で収集されます(省庁RSS: 毎時、議案: 3時間ごと、会議録: 6時間ごと)。
-アプリは `https://kokkai-watch.<サブドメイン>.workers.dev` で公開されます。
+
+### 収集 Worker の手動実行(任意)
+
+収集 Worker に手動実行用のトークンを設定すると、Cron を待たずにデータを入れられます。
+
+```bash
+cd workers/collector && npx wrangler secret put ADMIN_TOKEN
+```
+
+```bash
+curl -X POST -H "Authorization: Bearer <トークン>" https://kokkai-watch-collector.<サブドメイン>.workers.dev/run/bills
+```
