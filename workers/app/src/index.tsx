@@ -1,6 +1,6 @@
 /**
- * kokkai-watch app
- * 画面(SSR)と公開 API を返す Worker。
+ * kokkai-watch
+ * 画面(SSR)と公開 API を返し、Cron Triggers で一次資料を定期収集する Worker。
  */
 import { Hono } from "hono";
 import {
@@ -14,6 +14,7 @@ import {
   type Env,
   type TimelineKind,
 } from "./db";
+import { handleManualRun, handleScheduled } from "./collector";
 import { AboutPage, BillPage, BillsPage, HomePage, NotFoundPage, TimelinePage } from "./pages";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -92,6 +93,8 @@ app.get("/api/timeline", async (c) => {
 
 app.get("/healthz", (c) => c.text("ok"));
 
+app.post("/admin/run/:job", (c) => handleManualRun(c.req.raw, c.env, c.req.param("job")));
+
 app.notFound((c) => c.html(<NotFoundPage />, 404));
 
 app.onError((err, c) => {
@@ -99,4 +102,9 @@ app.onError((err, c) => {
   return c.text("エラーが発生しました。時間をおいて再度お試しください。", 500);
 });
 
-export default app;
+export default {
+  fetch: app.fetch,
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(handleScheduled(event, env));
+  },
+} satisfies ExportedHandler<Env>;
