@@ -376,8 +376,13 @@ ingestApp.post("/stories", async (c) => {
          writer = excluded.writer, version = excluded.version, updated_at = excluded.updated_at`,
     ).bind(storyId, slug, topicId, story.title, contentJson, writer, version, now, now),
     c.env.DB.prepare("DELETE FROM story_citations WHERE story_id = ?").bind(storyId),
-    ...[...citedIds].map((sid) => c.env.DB.prepare("INSERT INTO story_citations (story_id, source_id) VALUES (?, ?)").bind(storyId, sid)),
+    // D1 のクエリ数上限を考慮し、引用元は JSON 配列で1文にまとめて入れる
+    c.env.DB.prepare(
+      "INSERT OR IGNORE INTO story_citations (story_id, source_id) SELECT ?1, value FROM json_each(?2)",
+    ).bind(storyId, JSON.stringify([...citedIds])),
     c.env.DB.prepare("UPDATE topics SET status = 'published' WHERE id = ?").bind(topicId),
+    // 書き直して再公開したので、それまでの誤り報告は解決済みにする(残すと次の報告1件で再び取り下げになる)
+    c.env.DB.prepare("UPDATE corrections SET status = 'resolved' WHERE story_id = ? AND status = 'open'").bind(storyId),
     c.env.DB.prepare(
       `INSERT INTO story_submissions (topic_id, writer, payload, passed, issues_json, story_id, created_at)
        VALUES (?, ?, ?, 1, ?, ?, ?)`,

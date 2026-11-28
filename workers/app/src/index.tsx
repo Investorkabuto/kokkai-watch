@@ -16,6 +16,7 @@ import {
 } from "./db";
 import { handleManualRun, handleScheduled } from "./collector";
 import { listPublishedStories } from "./storiesDb";
+import { ingestApp } from "./ingest";
 import { registerStoryRoutes } from "./stories";
 import { AboutPage, BillPage, BillsPage, HomePage, NotFoundPage, TimelinePage } from "./pages";
 
@@ -29,6 +30,11 @@ const timelineKind = (s: string | undefined): TimelineKind =>
 // 画面は数分キャッシュ(データの更新は最短でも1時間ごと)
 app.use("*", async (c, next) => {
   await next();
+  // 認証つきの API は共有キャッシュに載せない
+  if (c.req.path.startsWith("/ingest/") || c.req.path.startsWith("/admin/")) {
+    c.res.headers.set("Cache-Control", "no-store");
+    return;
+  }
   if (c.req.method === "GET" && c.res.status === 200 && !c.res.headers.has("Cache-Control")) {
     c.res.headers.set("Cache-Control", "public, max-age=300");
   }
@@ -97,6 +103,9 @@ app.get("/api/timeline", async (c) => {
 });
 
 app.get("/healthz", (c) => c.text("ok"));
+
+// Muse(AI)向けの投稿 API
+app.route("/ingest/v1", ingestApp);
 
 app.post("/admin/run/:job", (c) => handleManualRun(c.req.raw, c.env, c.req.param("job")));
 
